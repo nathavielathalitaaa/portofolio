@@ -1,0 +1,262 @@
+/* =====================================================
+   GOOGLE FONTS — must precede @import "tailwindcss"
+   ===================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+@import "tailwindcss";
+
+/* =====================================================
+   CSS CUSTOM PROPERTIES & TOKENS
+   ===================================================== */
+:root {
+  --bg-color:           #E5F8FF; /* surface.page */
+  
+  /* Brand Colors - Darkened Pink */
+  --brand-pink:         #C73053; /* deep rich pink */
+  --brand-pink-hover:   #A52240; /* even darker pink for hover */
+  --brand-pink-light:   #FFCCD5; /* deeper light pink for visibility */
+  --brand-navy:         #1E3A5F; /* dark sections, navy background */
+  
+  /* Surface Colors */
+  --surface-page:       #E5F8FF;
+  --surface-card:       #FFFFFF;
+  --surface-muted:      #F8FAFC;
+  
+  /* Text Colors */
+  --text-dark:          #0F172A; /* text.primary */
+  --text-muted:         #64748B; /* text.muted */
+  
+  /* Legacy names mapping to prevent breaks */
+  --accent-coral:       #C73053;
+  --accent-pink:        #FFCCD5;
+  --accent-yellow:      #C3E2F9;
+  --accent-earthy:      #C73053; /* map earthy to brand pink */
+  
+  --glass-bg:           #FFFFFF;
+  --glass-border:       #E2E8F0;
+  --glass-shadow:       0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* =====================================================
+   BASE LAYER — body background, scrollbar, reset
+   ===================================================== */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--surface-page) !important;
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-pink-light);
+    border-radius: 5px;
+    border: 2px solid var(--surface-page);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brand-pink); }
+}
+
+/* =====================================================
+   COMPONENTS LAYER — SahabatBuku Design System Patterns
+   ===================================================== */
+@layer components {
+
+  /* ── 1. Clean Card (rounded-2xl, border, shadow-card) ── */
+  .card-sahabat {
+    background: var(--surface-card) !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 16px !important; /* rounded-2xl */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.025) !important; /* shadow-card */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .card-sahabat:hover {
+    /* No shadow increase or translate translation on hover */
+  }
+
+  /* ── 2. Brutalist Card (border-2 border-black, shadow-brutal) ── */
+  .card-brutal {
+    background: var(--surface-card) !important;
+    border: 2px solid #000000 !important;
+    border-radius: 0px !important; /* no radius */
+    box-shadow: 6px 6px 0px #000000 !important;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .card-brutal:hover {
+    /* No shadow increase or transform change on hover */
+  }
+
+  /* ── 3. Primary Pink Button ── */
+  .btn-primary-pink {
+    background-color: var(--brand-pink) !important;
+    color: #ffffff !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important; /* rounded-btn */
+    padding: 12px 24px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 14px 0 rgba(199, 48, 83, 0.3) !important; /* shadow-pink-sm */
+    border: none !important;
+    cursor: pointer !important;
+  }
+
+  .btn-primary-pink:hover {
+    background-color: var(--brand-pink-hover) !important;
+    /* No translateY lift or shadow change on hover */
+  }
+
+  /* ── 4. Brutalist Outline Button ── */
+  .btn-outline-brutal {
+    border: 2px solid #000000 !important;
+    border-radius: 0px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    box-shadow: 4px 4px 0px #000000 !important;
+    cursor: pointer !important;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.2s ease, color 0.2s ease !important;
+  }
+
+  .btn-outline-brutal:hover {
+    /* Color change only, no motion/lift */
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  /* ── Legacy fallback glass-card mapped to card-brutal ── */
+  .glass-card {
+    background: var(--surface-card) !important;
+    border: 2px solid #000000 !important;
+    border-radius: 0px !important;
+    box-shadow: 6px 6px 0px #000000 !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  }
+  .glass-card:hover {
+    /* No shadow increase or transform change on hover */
+  }
+
+  /* ── Decorative background blobs ── */
+  .bg-glow {
+    position: fixed;
+    width: 45vw;
+    height: 45vw;
+    max-width: 600px;
+    border-radius: 50%;
+    filter: blur(140px);
+    z-index: -1;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .bg-glow-1 {
+    top: -10%;
+    right: -5%;
+    background-color: var(--brand-pink-light);
+    animation: pulse-slow 8s infinite alternate;
+  }
+  .bg-glow-2 {
+    top: 40%;
+    left: -10%;
+    background-color: #E5F8FF;
+    animation: pulse-slow 12s infinite alternate-reverse;
+  }
+  .bg-glow-3 {
+    bottom: -5%;
+    right: 10%;
+    background-color: var(--brand-pink-light);
+    animation: pulse-slow 10s infinite alternate;
+  }
+
+  /* ── Skill card float animation ── */
+  .bob-float {
+    animation: bob-float 6s ease-in-out infinite alternate;
+  }
+  .bob-float:hover {
+    animation-play-state: paused;
+    /* No transform change or shadow change on hover, stays floating */
+  }
+
+  /* ── Section title underline ── */
+  .title-underline {
+    width: 50px;
+    height: 4px;
+    background-color: var(--brand-pink);
+    margin: 12px auto 0;
+    border-radius: 2px;
+  }
+
+  /* ── Carousel slide ── */
+  .carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    z-index: 1;
+  }
+  .carousel-slide.active {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  /* ── Scroll indicator mouse icon ── */
+  .mouse-icon {
+    width: 26px;
+    height: 42px;
+    border: 2px solid var(--text-dark);
+    border-radius: 15px;
+    position: relative;
+    display: block;
+  }
+  .mouse-wheel {
+    width: 4px;
+    height: 8px;
+    background: var(--text-dark);
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll-wheel 1.5s infinite;
+  }
+
+  /* ── Footer text colour ── */
+  .footer-text {
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* =====================================================
+   KEYFRAMES
+   ===================================================== */
+@keyframes pulse-slow {
+  0%   { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(3%, 5%); }
+}
+
+@keyframes bob-float {
+  0%   { transform: rotate(var(--rot, 0deg)) translateY(0); }
+  100% { transform: rotate(var(--rot, 0deg)) translateY(-10px); }
+}
+
+@keyframes scroll-wheel {
+  0%   { top: 8px;  opacity: 1; }
+  100% { top: 22px; opacity: 0; }
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}

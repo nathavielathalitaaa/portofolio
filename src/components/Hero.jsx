@@ -129,6 +129,19 @@ export default function Hero() {
           >
             Siswa SMK yang membangun solusi teknologi nyata
           </p>
+
+          {/* CTA Refleksi Semester */}
+          <a
+            href="#journey"
+            className="mt-8 px-6 py-3 border-2 border-black bg-white text-black font-bold text-[0.95rem] shadow-[4px_4px_0px_#e5345a] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#e5345a] transition-all flex items-center gap-2"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('journey')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            Ingin lihat refleksi semester? Ke sini! <i className="fa-solid fa-arrow-down ml-1"></i>
+          </a>
         </div>
 
         {/* Scroll indicator */}

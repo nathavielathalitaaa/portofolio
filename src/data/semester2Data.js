@@ -113,7 +113,7 @@ export const DATA_PORTOFOLIO_LOMBA = {
       kategori: "Karya Tulis",
       icon: "fa-solid fa-pen-nib",
       warna: "#e5345a",
-      gambarPath: "/assets/NEXUS IMPACT National Youth Essay Competition 202 .png",
+      gambarPath: "/assets/NEXUS2.jpeg",
       link: "https://docs.google.com/document/d/1F8Ma_SAzFUNPXmsZgJP3pLq72VImCtYo/edit?usp=sharing&ouid=116011274067610750634&rtpof=true&sd=true"
     },
     {

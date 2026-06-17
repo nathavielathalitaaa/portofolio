@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import LanyardNav from '../components/LanyardNav'
@@ -429,6 +429,10 @@ function CoverSlide() {
 // =========================================================================
 
 export default function Semester2() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[var(--surface-page)]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", '--brand-pink': '#e5345a', '--brand-pink-light': '#ffe6eb' }}>
       {/* Lanyard Navigation — tarik ke bawah untuk kembali */}

@@ -1061,6 +1061,10 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null) as MutableRefObject<HTMLCanvasElement | null>;
   const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
   const [isMoving, setIsMoving] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+
+  const activeIndex = activeItem ? items.indexOf(activeItem) : -1;
+  const isBlocked = activeIndex >= 2;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1098,6 +1102,10 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
   }, [items, scale]);
 
   const handleButtonClick = () => {
+    if (isBlocked) {
+      setShowPopup(true);
+      return;
+    }
     if (!activeItem?.link) return;
     if (activeItem.link.startsWith('http')) {
       window.open(activeItem.link, '_blank');
@@ -1135,6 +1143,7 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
                   ? 'opacity-0 pointer-events-none duration-[100ms]'
                   : 'opacity-100 pointer-events-auto duration-[500ms]'
               }
+              ${isBlocked ? 'blur-[8px]' : ''}
             `}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
@@ -1158,11 +1167,21 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
                   ? 'opacity-0 pointer-events-none duration-[100ms] translate-x-[-60%] -translate-y-1/2'
                   : 'opacity-100 pointer-events-auto duration-[500ms] translate-x-[-90%] -translate-y-1/2'
               }
+              ${isBlocked ? 'blur-[5px]' : ''}
             `}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             {activeItem.description}
           </p>
+
+          {isBlocked && !isMoving && (
+            <div
+              className="absolute left-[1.6em] top-[60%] translate-x-[20%] z-20 border-2 border-black bg-yellow-300 text-black font-black uppercase text-[0.65rem] sm:text-[0.75rem] px-3 py-1 shadow-[2px_2px_0px_#000] rotate-[-2deg] select-none pointer-events-none"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              🚧 Sedang Pengembangan
+            </div>
+          )}
 
           <div
             onClick={handleButtonClick}
@@ -1190,9 +1209,42 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
               }
             `}
           >
-            <p className="select-none relative text-white font-black top-[0.5px] text-[24px]">&#x2197;</p>
+            <p className="select-none relative text-white font-black top-[0.5px] text-[20px]">
+              {isBlocked ? '🔒' : '↗'}
+            </p>
           </div>
         </>
+      )}
+
+      {showPopup && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/40 backdrop-blur-[3px] pointer-events-auto">
+          <div className="card-brutal p-8 bg-white max-w-[400px] w-full flex flex-col items-center text-center relative mx-4">
+            {/* Tape decor */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-36 h-8 bg-yellow-200 border-2 border-black rotate-[-2deg] z-30"
+              style={{ clipPath: 'polygon(0% 15%, 5% 0%, 95% 0%, 100% 15%, 100% 85%, 95% 100%, 5% 100%, 0% 85%)' }}
+            />
+            
+            <div className="w-16 h-16 rounded-full bg-yellow-100 border-2 border-black flex items-center justify-center text-[2rem] mb-4 mt-2">
+              🚧
+            </div>
+            
+            <h3 className="font-black text-[1.4rem] text-[var(--text-dark)] leading-tight mb-2 uppercase" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Sedang Pengembangan
+            </h3>
+            
+            <p className="text-gray-600 text-[0.92rem] leading-relaxed mb-6" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Proyek <strong>{activeItem?.title}</strong> saat ini sedang dalam proses pengembangan/development. Nantikan update berikutnya!
+            </p>
+            
+            <button
+              onClick={() => setShowPopup(false)}
+              className="btn-outline-brutal w-full py-2.5 font-bold uppercase tracking-wider text-[0.85rem]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              Oke, Mengerti!
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -113,28 +113,32 @@ export const DATA_PORTOFOLIO_LOMBA = {
       kategori: "Karya Tulis",
       icon: "fa-solid fa-pen-nib",
       warna: "#e5345a",
-      gambarPath: "/assets/NEXUS IMPACT National Youth Essay Competition 202 .png"
+      gambarPath: "/assets/NEXUS IMPACT National Youth Essay Competition 202 .png",
+      link: "https://docs.google.com/document/d/1F8Ma_SAzFUNPXmsZgJP3pLq72VImCtYo/edit?usp=sharing&ouid=116011274067610750634&rtpof=true&sd=true"
     },
     {
       namaLomba: "AI Open Innovation Challenge 2026",
       kategori: "Kecerdasan Buatan",
       icon: "fa-solid fa-robot",
       warna: "#6366f1",
-      gambarPath: "/assets/AI Open Innovation Challenge 2026.png"
+      gambarPath: "/assets/AI Open Innovation Challenge 2026.png",
+      link: "https://docs.google.com/document/d/1H_FnQGi0qmPrteWljBIqsBZEdZKhJOoaCid4XBuBEDg/edit?usp=sharing"
     },
     {
       namaLomba: "Universitas Pakuan Lomba Cerpen 2026",
       kategori: "Karya Tulis",
       icon: "fa-solid fa-pen-nib",
       warna: "#e5345a",
-      gambarPath: "/assets/Universitas Pakuan Lomba Cerpen 2026 .png"
+      gambarPath: "/assets/Universitas Pakuan Lomba Cerpen 2026 .png",
+      link: "https://docs.google.com/document/d/1z_o71NnnazekT05yJcdUFjRnvFSBbxX3icewCAI7-Ck/edit?usp=sharing"
     },
     {
       namaLomba: "Halo Mentor NATIONAL BMC COMPETITION 2026",
       kategori: "Bisnis & Inovasi",
       icon: "fa-solid fa-lightbulb",
       warna: "#f59e0b",
-      gambarPath: "/assets/Halo Mentor NATIONAL BMC COMPETITION 2026.png"
+      gambarPath: "/assets/Halo Mentor NATIONAL BMC COMPETITION 2026.png",
+      link: "https://canva.link/1yry4epyr27n0s1"
     },
     {
       namaLomba: "Coding & Algorithms Tournament (CAT) 2026",

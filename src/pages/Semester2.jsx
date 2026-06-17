@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
-import Navbar from '../components/Navbar'
+import LanyardNav from '../components/LanyardNav'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts'
 import { cn } from '@/lib/utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
@@ -113,7 +113,7 @@ function SlideSection({ index, judul, children, maxWidthClass = 'max-w-[1000px]'
   return (
     <section
       ref={ref}
-      className={`min-h-screen py-[100px] px-[5%] ${maxWidthClass} mx-auto w-full flex flex-col justify-center items-start border-b border-black/10 last:border-0 relative z-10`}
+      className={`min-h-screen ${index === 1 ? 'pt-8 pb-[80px] justify-start' : 'py-[100px] justify-center'} px-[5%] ${maxWidthClass} mx-auto w-full flex flex-col items-start border-b border-black/10 last:border-0 relative z-10`}
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -192,58 +192,264 @@ function InteractiveLetter({ text }) {
 }
 
 // =========================================================================
+// SLIDE 1 — COVER COMPONENT (extracted for hooks compliance)
+// =========================================================================
+
+function CoverSlide() {
+  const coverRef = useRef(null)
+  const coverInView = useInView(coverRef, { once: true, margin: '-60px' })
+
+  // Stagger helper — each element gets a growing delay
+  const stagger = (i) => ({
+    initial: { opacity: 0, y: 18 },
+    animate: coverInView ? { opacity: 1, y: 0 } : {},
+    transition: { duration: 0.5, delay: 0.1 + i * 0.12, ease: 'easeOut' },
+  })
+
+  // Decorative elements use scale+rotate entrance
+  const decoIn = (i, rot = 0) => ({
+    initial: { opacity: 0, scale: 0.7, rotate: rot - 8 },
+    animate: coverInView ? { opacity: 1, scale: 1, rotate: rot } : {},
+    transition: { duration: 0.45, delay: 0.05 + i * 0.1, ease: 'easeOut' },
+  })
+
+  return (
+    <div className="relative w-full pt-2 sm:pt-4" ref={coverRef}>
+
+      {/* Washi tape decorators */}
+      <motion.div {...decoIn(0, -6)} className="absolute -top-6 left-4 sm:left-10 w-20 sm:w-24 h-6 sm:h-7 -rotate-6 select-none pointer-events-none z-30"
+        style={{ background: 'repeating-linear-gradient(90deg, #93c5fd 0px, #93c5fd 8px, #bfdbfe 8px, #bfdbfe 16px)', border: '1px solid rgba(0,0,0,0.08)', clipPath: 'polygon(0% 15%, 5% 0%, 95% 0%, 100% 15%, 100% 85%, 95% 100%, 5% 100%, 0% 85%)' }} />
+      <motion.div {...decoIn(1, 3)} className="absolute -top-4 right-8 sm:right-16 w-16 sm:w-20 h-6 sm:h-7 rotate-3 select-none pointer-events-none z-30"
+        style={{ background: 'repeating-linear-gradient(90deg, #fde68a 0px, #fde68a 8px, #fef3c7 8px, #fef3c7 16px)', border: '1px solid rgba(0,0,0,0.08)', clipPath: 'polygon(0% 15%, 5% 0%, 95% 0%, 100% 15%, 100% 85%, 95% 100%, 5% 100%, 0% 85%)' }} />
+
+      {/* Pos Stamp — rotating sticker */}
+      <motion.div {...decoIn(2, 8)} className="absolute -top-3 right-2 sm:right-8 z-40 rotate-[8deg] select-none pointer-events-none">
+        <div className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-full border-2 border-black bg-[#FAF6EC] flex flex-col items-center justify-center shadow-[3px_3px_0_#000]"
+          style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px)' }}>
+          <div className="w-[56px] h-[56px] sm:w-[70px] sm:h-[70px] rounded-full border border-dashed border-[#C73053]/60 flex flex-col items-center justify-center">
+            <span className="text-[#C73053] font-bold tracking-widest uppercase" style={{ fontFamily: "'Caveat', cursive", fontSize: '0.7rem' }}>Jurnal</span>
+            <span className="text-[#C73053] font-black text-[0.9rem] sm:text-[1.05rem] leading-none">SMT 2</span>
+            <span className="text-[#C73053] text-[0.5rem]">✦ ✦ ✦</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Scrapbook Spread Base — paper texture */}
+      <div className="card-brutal w-full min-h-[480px] sm:min-h-[560px] flex flex-col md:flex-row gap-0 relative overflow-hidden"
+        style={{
+          background: '#FAF6EC',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E")`,
+          border: '2px solid #000'
+        }}>
+
+        {/* Lined paper rules — left page only */}
+        <div className="hidden md:block absolute left-0 top-0 bottom-0 w-[58%] pointer-events-none z-0 overflow-hidden opacity-70">
+          {[...Array(20)].map((_, i) => (
+            <div key={i} className="absolute w-full border-b border-blue-100/60" style={{ top: `${48 + i * 26}px` }} />
+          ))}
+          <div className="absolute top-0 bottom-0 left-[40px] border-l-2 border-red-200/50" />
+        </div>
+
+        {/* Binder Spine Rings */}
+        <div className="hidden md:flex flex-col justify-between absolute top-8 bottom-8 left-[58%] -translate-x-1/2 w-8 z-20 pointer-events-none">
+          {[...Array(7)].map((_, i) => (
+            <div key={i} className="flex gap-1 justify-center items-center">
+              <div className="w-1.5 h-1.5 bg-slate-600 rounded-full border border-black" />
+              <div className="w-8 h-3 bg-gradient-to-r from-slate-300 to-slate-100 border border-black rounded-full" />
+              <div className="w-1.5 h-1.5 bg-slate-600 rounded-full border border-black" />
+            </div>
+          ))}
+        </div>
+        <div className="hidden md:block absolute top-0 bottom-0 left-[58%] -translate-x-1/2 w-[2px] bg-black/10 z-10" />
+
+        {/* ===== LEFT PAGE — Judul & Identitas ===== */}
+        <div className="flex-[1.4] flex flex-col gap-4 sm:gap-6 p-5 sm:p-7 md:p-10 md:pr-10 z-10 pb-8 sm:pb-10 relative justify-center">
+
+          {/* Decorative heart blob behind title */}
+          <motion.div {...decoIn(0, -12)} className="absolute -left-4 top-4 sm:top-6 text-pink-200 opacity-40 text-[3.5rem] sm:text-[4.5rem] pointer-events-none select-none -rotate-12">
+            <i className="fa-solid fa-heart" />
+          </motion.div>
+
+          {/* Eyebrow tag */}
+          <motion.div {...stagger(1)} className="relative inline-flex items-center gap-2 self-start">
+            <span className="bg-pink-50 border-2 border-black px-2.5 sm:px-3 py-1 -rotate-1 shadow-[2px_2px_0_#000] text-[#7a1a30] font-bold uppercase text-[0.65rem] sm:text-[0.7rem] tracking-[0.15em]">
+              Buku Catatan Siswa
+            </span>
+          </motion.div>
+
+          {/* Judul Kreatif — split into big keyword lines + handwriting sub */}
+          <motion.div {...stagger(2)} className="relative z-10">
+            <h1 className="font-black text-[var(--text-dark)] leading-[1.05] uppercase text-[1.7rem] sm:text-[2.1rem] md:text-[2.6rem] tracking-tight">
+              <RenderField value={DATA_COVER.judulKreatif && (
+                <>
+                  Refleksi Diri
+                  <br />
+                  <span className="text-[#C73053]">&amp; Target</span>
+                  <br />
+                  Pengembangan
+                </>
+              )} />
+            </h1>
+
+            {/* Doodle wavy underline */}
+            <svg width="200" className="w-[160px] sm:w-[200px] md:w-[240px]" height="10" viewBox="0 0 240 10" preserveAspectRatio="none">
+              <path d="M0,5 Q10,0 20,5 Q30,10 40,5 Q50,0 60,5 Q70,10 80,5 Q90,0 100,5 Q110,10 120,5 Q130,0 140,5 Q150,10 160,5 Q170,0 180,5 Q190,10 200,5 Q210,0 220,5 Q230,10 240,5"
+                fill="none" stroke="#C73053" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+            </svg>
+
+            <div className="text-[1.15rem] sm:text-[1.4rem] md:text-[1.6rem] font-bold text-[#7a1a30] mt-1"
+              style={{ fontFamily: "'Caveat', cursive" }}>
+              Siswa Semester 2 ✎
+            </div>
+          </motion.div>
+
+          {/* Identitas — hanging label / luggage tag */}
+          <motion.div {...stagger(3)} className="relative mt-2 sm:mt-4 self-start max-w-[300px] sm:max-w-[320px]">
+            <div className="absolute -top-3 left-6 w-3 h-3 rounded-full bg-slate-300 border border-black z-20" />
+            <div className="border-2 border-black bg-white px-4 sm:px-5 py-3 sm:py-4 shadow-[4px_4px_0px_#000000] -rotate-1 flex flex-col gap-1.5">
+              <div className="font-bold text-[0.95rem] sm:text-[1.05rem] text-[var(--text-dark)] uppercase tracking-wide">
+                <RenderField value={DATA_COVER.namaSiswa} />
+              </div>
+              <div className="h-[2px] w-12 bg-[#C73053]" />
+              <div className="flex flex-col gap-0.5 text-[0.82rem] sm:text-[0.9rem] font-semibold text-[var(--text-muted)]">
+                <div>NIS &nbsp;:&nbsp; <RenderField value={DATA_COVER.nis} /></div>
+                <div>Kelas &nbsp;:&nbsp; <RenderField value={DATA_COVER.kelas} /></div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* XP Progress Bar — Semester 1 → Semester 2 */}
+          <motion.div {...stagger(4)} className="mt-3 sm:mt-5 w-full max-w-[320px] self-start">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <span className="font-bold uppercase text-[#7a1a30] px-1.5 py-0.5 text-[0.85rem] sm:text-[0.95rem]"
+                style={{
+                  fontFamily: "'Caveat', cursive",
+                  background: 'linear-gradient(to bottom, transparent 20%, #93c5fd50 20%, #93c5fd50 85%, transparent 85%)',
+                }}>
+                ✦ Progres Semester
+              </span>
+            </div>
+            {/* XP Bar container */}
+            <div className="border-2 border-black bg-white p-2 shadow-[3px_3px_0px_#000000]">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[0.65rem] sm:text-[0.7rem] font-black uppercase tracking-wider text-[var(--text-muted)]">SMT 1</span>
+                <span className="text-[0.65rem] sm:text-[0.7rem] font-black uppercase tracking-wider text-[#C73053]">SMT 2</span>
+              </div>
+              <div className="w-full h-5 sm:h-6 bg-slate-100 border-2 border-black relative overflow-hidden">
+                <motion.div
+                  className="h-full bg-[#C73053]"
+                  initial={{ width: '0%' }}
+                  animate={coverInView ? { width: '100%' } : { width: '0%' }}
+                  transition={{ duration: 1.2, delay: 0.8, ease: 'easeOut' }}
+                />
+                {/* Notch marks at 25%, 50%, 75% */}
+                <div className="absolute top-0 bottom-0 left-1/4 w-[2px] bg-black/15" />
+                <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/15" />
+                <div className="absolute top-0 bottom-0 left-3/4 w-[2px] bg-black/15" />
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="font-mono text-[0.6rem] sm:text-[0.65rem] text-[var(--text-muted)] font-bold">LV.1</span>
+                <span className="font-mono text-[0.6rem] sm:text-[0.65rem] text-[var(--text-muted)] font-bold">COMPLETE ✓</span>
+                <span className="font-mono text-[0.6rem] sm:text-[0.65rem] text-[#C73053] font-bold">LV.2</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Doodle stars accent */}
+          <motion.svg {...decoIn(5)} width="20" height="20" viewBox="0 0 16 16" className="absolute bottom-8 left-10 opacity-50 pointer-events-none">
+            <path d="M8,1 L9,7 L15,8 L9,9 L8,15 L7,9 L1,8 L7,7 Z" fill="#C73053" />
+          </motion.svg>
+
+          {/* Page number */}
+          <div className="absolute bottom-2 left-2 w-7 h-7 rounded-full border-2 border-black bg-blue-100 flex items-center justify-center font-bold shadow-sm select-none z-20"
+            style={{ fontFamily: "'Caveat', cursive", fontSize: '0.9rem' }}>
+            01
+          </div>
+        </div>
+
+        {/* ===== RIGHT PAGE — Foto ditempel push-pin ===== */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 sm:gap-4 p-5 sm:p-7 md:p-10 md:pl-10 z-10 relative">
+
+          {/* Push-pin photo */}
+          <motion.div {...stagger(3)} className="relative rotate-[-2deg]">
+            {/* Push pin */}
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20 w-5 h-5 rounded-full bg-[#C73053] border-2 border-black shadow-[1px_1px_0_#000]" />
+
+            <div className="border-2 border-black p-2.5 sm:p-3 pb-7 sm:pb-9 bg-white shadow-[5px_5px_0px_#000000] w-[200px] sm:w-[230px] md:w-[250px]">
+              <div className="border border-black/10 p-1 bg-slate-50 overflow-hidden">
+                {DATA_COVER.fotoDiriPath ? (
+                  <img
+                    src={DATA_COVER.fotoDiriPath}
+                    alt="Foto Diri"
+                    className="w-full h-[190px] sm:h-[230px] md:h-[250px] object-cover object-top"
+                  />
+                ) : (
+                  <div className="w-full h-[190px] sm:h-[230px] md:h-[250px] flex flex-col items-center justify-center text-[var(--text-muted)] italic text-[0.8rem] text-center p-2 bg-slate-50">
+                    <i className="fa-regular fa-user text-[2rem] mb-2 opacity-50" />
+                    &mdash; Foto Diri belum diisi &mdash;
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 sm:mt-2.5 text-center text-slate-500"
+                style={{ fontFamily: "'Caveat', cursive", fontSize: '0.95rem', fontWeight: 600 }}>
+                <RenderField value={DATA_COVER.namaSiswa && "Nathaviela T. K. ✨"} />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Sticky note caption */}
+          <motion.div {...stagger(5)} className="relative rotate-2 bg-yellow-50 border-2 border-yellow-200 px-3 sm:px-4 py-2.5 sm:py-3 text-center max-w-[240px] sm:max-w-[260px] mt-1 sm:mt-2"
+            style={{ boxShadow: '3px 3px 0 #fde68a' }}>
+            <svg width="14" height="14" viewBox="0 0 16 16" className="absolute -top-2 -right-2 opacity-60">
+              <path d="M8,1 L9,7 L15,8 L9,9 L8,15 L7,9 L1,8 L7,7 Z" fill="#ca8a04" />
+            </svg>
+            <p className="text-[#7a1a30] font-bold text-[0.9rem] sm:text-[1.05rem]"
+              style={{ fontFamily: "'Caveat', cursive" }}>
+              "Satu semester, satu langkah lebih dekat ke versi terbaik diriku"
+            </p>
+          </motion.div>
+
+          {/* Page number */}
+          <div className="absolute bottom-2 right-2 w-7 h-7 rounded-full border-2 border-black bg-pink-100 flex items-center justify-center font-bold shadow-sm select-none z-20"
+            style={{ fontFamily: "'Caveat', cursive", fontSize: '0.9rem' }}>
+            02
+          </div>
+        </div>
+
+        {/* Scattered bg accents */}
+        <div className="absolute top-[20%] left-[55%] text-pink-300/30 pointer-events-none select-none z-20 rotate-12 text-[0.8rem]">♡</div>
+        <div className="absolute bottom-[18%] left-[60%] text-blue-300/30 pointer-events-none select-none z-20 -rotate-12 text-[0.7rem]">♡</div>
+      </div>
+    </div>
+  )
+}
+
+// =========================================================================
 // MAIN PAGE COMPONENT
 // =========================================================================
 
 export default function Semester2() {
   return (
     <div className="min-h-screen bg-[var(--surface-page)]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", '--brand-pink': '#e5345a', '--brand-pink-light': '#ffe6eb' }}>
-      {/* Navigation Navbar */}
-      <Navbar />
-
-      {/* Floating Back Link */}
-
+      {/* Lanyard Navigation — tarik ke bawah untuk kembali */}
+      <LanyardNav
+        photoSrc={DATA_COVER.fotoDiriPath || '/assets/IDENTITAS_SEMESTER2.png'}
+        name={DATA_COVER.namaSiswa || 'Nathaviela T.K.'}
+        label="Nathaviela"
+        homePath="/"
+      />
 
       {/* Presentation Container */}
-      <div className="w-full flex flex-col relative pt-[80px]">
+      <div className="w-full flex flex-col relative pt-0">
 
-
-        {/* SLIDE 1 — COVER */}
-        <SlideSection index={1} judul="COVER">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full pt-4">
-            <div className="flex flex-col gap-4 text-left">
-              <h1 className="text-[2.2rem] sm:text-[3rem] font-black text-[var(--text-dark)] leading-[1.2] uppercase">
-                <RenderField value={DATA_COVER.judulKreatif} />
-              </h1>
-              <div className="h-[4px] w-20 bg-[var(--brand-pink)] rounded-none" />
-              <div className="flex flex-col gap-2 font-semibold text-[1rem] sm:text-[1.05rem] text-[var(--text-dark)] mt-4">
-                <div>Nama: <RenderField value={DATA_COVER.namaSiswa} /></div>
-                <div>NIS: <RenderField value={DATA_COVER.nis} /></div>
-                <div>Kelas: <RenderField value={DATA_COVER.kelas} /></div>
-              </div>
-            </div>
-            <div className="flex justify-center md:justify-end">
-              <div className="w-[260px] h-[320px] relative">
-                <div className="absolute inset-0 bg-[var(--brand-pink-light)] border-2 border-black translate-x-3 translate-y-3" />
-                <div className="absolute inset-0 bg-white border-2 border-black p-4 flex flex-col justify-between shadow-sm">
-                  <div className="w-full h-[230px] overflow-hidden border border-black bg-slate-100">
-                    {DATA_COVER.fotoDiriPath ? (
-                      <img src={DATA_COVER.fotoDiriPath} alt="Foto Diri" className="w-full h-full object-cover object-top" />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center text-[var(--text-muted)] italic text-[0.8rem] text-center p-2">
-                        <i className="fa-regular fa-user text-[2rem] mb-2 opacity-50" />
-                        &mdash; Foto Diri belum diisi &mdash;
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </SlideSection>
 
         {/* Google Font Caveat untuk handwriting */}
         <style>{`@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap');`}</style>
+
+        {/* SLIDE 1 — COVER (Jurnal/Scrapbook style) */}
+        <SlideSection index={1} judul="COVER" maxWidthClass="max-w-[1150px]">
+          <CoverSlide />
+        </SlideSection>
 
         {/* SLIDE 2 — REFLEKSI UMUM */}
         <SlideSection index={2} judul="REFLEKSI UMUM" maxWidthClass="max-w-[1150px]">
@@ -479,12 +685,12 @@ export default function Semester2() {
                         style={{ background: 'repeating-linear-gradient(90deg, #6ee7b7 0px, #6ee7b7 5px, #a7f3d0 5px, #a7f3d0 10px)', clipPath: 'polygon(0% 10%, 4% 0%, 96% 0%, 100% 10%, 98% 30%, 100% 50%, 97% 70%, 100% 90%, 96% 100%, 4% 100%, 0% 90%, 2% 70%, 0% 50%, 3% 30%)', border: '1px solid rgba(0,0,0,0.08)' }} />
                       <div className="border-2 border-black p-2 pb-6 bg-white shadow-[3px_3px_0px_#000000] w-[130px]">
                         <div className="border border-black/10 p-0.5 bg-slate-50">
-                          <img src="/assets/about3.jpeg" alt="Praktikum Jaringan"
+                          <img src="/assets/about3.jpeg" alt="Pengerjaan Sebagai Back-end"
                             className="w-full h-[90px] object-cover" />
                         </div>
                         <div className="mt-1.5 text-center text-slate-500"
                           style={{ fontFamily: "'Caveat', cursive", fontSize: '0.8rem', fontWeight: 600 }}>
-                          Praktikum Jaringan
+                          Pengerjaan Sebagai Back-end
                         </div>
                       </div>
                     </div>
@@ -624,36 +830,21 @@ export default function Semester2() {
                         const bgColors = ["bg-[#fff0f3]", "bg-[#fefce8]", "bg-[#ecfeff]", "bg-white"];
                         const cardRotation = idx === 0 ? 'rotate-[-2deg]' : idx === 1 ? 'rotate-[3deg]' : idx === 2 ? 'rotate-[-3deg]' : 'rotate-[2deg]';
                         const pinRotation = idx === 0 ? '-rotate-12' : idx === 1 ? 'rotate-12' : idx === 2 ? '-rotate-45' : 'rotate-45';
-                        const translateY = idx % 2 === 0 ? 'lg:-translate-y-6' : 'lg:translate-y-6';
 
                         return (
-                          <div key={idx} className={`flex-1 w-full card-brutal p-4 flex flex-col gap-2 min-h-[180px] justify-between relative ${bgColors[idx]} ${cardRotation} ${translateY}`}>
+                          <div key={idx} className={`flex-1 w-full card-brutal p-4 flex flex-col gap-2 min-h-[220px] h-full justify-between relative ${bgColors[idx]} ${cardRotation}`}>
                             
-                            {/* Desktop Thread to next card */}
-                            {idx < DATA_TANTANGAN_PEMBELAJARAN.tantanganList.length - 1 && (
-                              <svg className="hidden lg:block absolute top-0 left-1/2 w-[calc(100%+1.5rem)] h-[0px] pointer-events-none z-[1]" style={{ overflow: 'visible' }}>
-                                <line x1="0" y1="-12" x2="100%" y2={idx % 2 === 0 ? "36" : "-60"} stroke="#e5345a" strokeWidth="3" className="drop-shadow-[1px_2px_1px_rgba(0,0,0,0.3)]" />
-                              </svg>
-                            )}
-
-                            {/* Mobile Thread to next card */}
-                            {idx < DATA_TANTANGAN_PEMBELAJARAN.tantanganList.length - 1 && (
-                              <svg className="block lg:hidden absolute top-[-12px] left-1/2 w-[0px] h-[calc(100%+2rem)] pointer-events-none z-[1]" style={{ overflow: 'visible' }}>
-                                <line x1="0" y1="0" x2="0" y2="100%" stroke="#e5345a" strokeWidth="3" strokeDasharray="6,6" className="drop-shadow-[1px_2px_1px_rgba(0,0,0,0.3)]" />
-                              </svg>
-                            )}
-
                             {/* Pin */}
                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none">
                               <i className={`fa-solid fa-thumbtack text-[#e5345a] text-[1.2rem] ${pinRotation} drop-shadow-[1px_2px_1px_rgba(0,0,0,0.35)]`} />
                             </div>
 
                             <div className="flex flex-col text-left mt-2 z-10 bg-inherit relative h-full">
-                              <strong className="text-[var(--text-dark)] text-[0.95rem] font-black">{item.tantangan}</strong>
-                              <span className="text-slate-900 font-bold text-[0.8rem] mt-1 leading-relaxed">{item.deskripsi}</span>
+                              <strong className="text-[var(--text-dark)] text-[1.05rem] font-black">{item.tantangan}</strong>
+                              <span className="text-slate-600 font-medium text-[0.78rem] mt-1 leading-relaxed">{item.deskripsi}</span>
                             </div>
 
-                            <div className="mt-4 px-2.5 py-1.5 bg-white border border-black/10 text-[0.76rem] text-slate-800 font-medium z-10 relative">
+                            <div className="mt-4 px-3 py-2.5 bg-white border-2 border-black border-solid text-[0.76rem] text-slate-800 font-medium z-10 relative">
                               <span className="font-bold text-[#e5345a]">Solusi:</span> {item.solusi}
                             </div>
                           </div>
@@ -768,8 +959,8 @@ export default function Semester2() {
                 {DATA_PORTOFOLIO_LOMBA.lombaList.map((l, idx) => {
                   const pinRotations = ['-rotate-12', 'rotate-12', '-rotate-45', 'rotate-45', '-rotate-12', 'rotate-12', '-rotate-45'];
 
-                  return (
-                    <div key={idx} className={`card-brutal p-0 flex flex-col relative bg-slate-50 overflow-hidden`}>
+                  const cardInner = (
+                    <>
                       {/* Pin */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none select-none">
                         <i className={`fa-solid fa-thumbtack text-[1.2rem] text-gray-700 ${pinRotations[idx]} drop-shadow-[1px_2px_1px_rgba(0,0,0,0.35)]`} />
@@ -792,21 +983,36 @@ export default function Semester2() {
                             <i className={l.icon} />
                           </div>
                           <div className="flex flex-col gap-1 flex-1 min-w-0">
-                            <span className="font-black text-[0.92rem] text-[var(--text-dark)] leading-tight">
+                            <span className="font-black text-[0.92rem] text-[var(--text-dark)] leading-tight group-hover:underline">
                               {l.namaLomba}
                             </span>
                           </div>
                         </div>
 
-                        {/* Category Badge */}
-                        <div className="mt-auto pt-2 border-t border-black/5">
+                        {/* Category Badge & Link */}
+                        <div className="mt-auto pt-2 border-t border-black/5 flex justify-between items-center">
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[0.72rem] font-bold border border-black/15 bg-white"
                             style={{ color: '#475569' }}>
                             <i className={`${l.icon} text-[0.6rem]`} />
                             {l.kategori}
                           </span>
+                          {l.link && (
+                            <span className="text-[0.7rem] text-blue-600 font-bold group-hover:underline flex items-center gap-1">
+                              Lihat Project <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                            </span>
+                          )}
                         </div>
                       </div>
+                    </>
+                  );
+
+                  return l.link ? (
+                    <a href={l.link} target="_blank" rel="noopener noreferrer" key={idx} className="card-brutal p-0 flex flex-col relative bg-slate-50 overflow-hidden group hover:-translate-y-1 transition-transform cursor-pointer block">
+                      {cardInner}
+                    </a>
+                  ) : (
+                    <div key={idx} className="card-brutal p-0 flex flex-col relative bg-slate-50 overflow-hidden">
+                      {cardInner}
                     </div>
                   );
                 })}

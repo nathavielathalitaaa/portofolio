@@ -104,9 +104,6 @@ export default function About() {
             <p className="text-[1.02rem] leading-[1.7] font-medium" style={{ color: 'var(--text-muted)' }}>
               Saya memiliki ketertarikan dalam mengembangkan solusi digital yang menggabungkan teknologi web modern dengan kecerdasan buatan. Dengan pengalaman dalam pengembangan backend, perancangan basis data, integrasi AI, serta desain antarmuka yang berfokus pada pengalaman pengguna, saya berusaha menciptakan aplikasi yang tidak hanya berfungsi dengan baik tetapi juga memberikan dampak nyata bagi penggunanya.
             </p>
-            <p className="text-[1.02rem] leading-[1.7] font-medium" style={{ color: 'var(--text-muted)' }}>
-              Saya telah mengerjakan berbagai proyek di bidang pengembangan web dan AI, mulai dari perancangan sistem informasi, pengolahan data, hingga implementasi fitur berbasis kecerdasan buatan untuk mendukung proses pengambilan keputusan dan meningkatkan efisiensi pengguna. Selain aspek teknis, saya juga memiliki minat pada UI/UX Design untuk memastikan setiap solusi yang dibangun tetap intuitif, modern, dan mudah digunakan.
-            </p>
           </motion.div>
 
           {/* Photo with static out-of-frame layered effect */}

@@ -62,13 +62,12 @@ export default function Contact() {
           {/* Avatar */}
           <div className="mb-5">
             <div
-              className="w-[90px] h-[90px] rounded-full p-1 inline-flex items-center justify-center
-                         bg-white border border-slate-200 shadow-sm"
+              className="w-[90px] h-[90px] rounded-none border-2 border-black shadow-[3px_3px_0px_#000] inline-flex items-center justify-center overflow-hidden bg-white"
             >
               <img
                 src="/assets/profile.png"
                 alt="Nathaviela"
-                className="w-full h-full object-cover rounded-full"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -85,32 +84,66 @@ export default function Contact() {
           </p>
 
           {/* Email */}
-          <div className="flex flex-col gap-[15px] w-full mb-[25px]">
+          <div className="flex flex-col gap-[15px] w-full items-center mb-[25px]">
+            <p className="text-[0.75rem] font-bold uppercase tracking-widest text-[var(--text-muted)] mb-2 self-start">
+              Kirim Email
+            </p>
             <a
-              href="mailto:nathaviela.tk@gmail.com"
+              href="mailto:heythismyword@gmail.com"
               className="inline-flex items-center justify-center gap-[10px] no-underline font-bold
                          bg-white border-2 border-black px-5 py-3 rounded-none shadow-[3px_3px_0px_#000000]
-                         hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000000] transition-all"
+                         hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000000] transition-all
+                         max-w-[380px] w-full"
               style={{ color: 'var(--text-dark)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <span style={{ color: 'var(--brand-pink)', fontSize: '1.1rem' }}>
                 <i className="fa-solid fa-envelope" />
               </span>
-              <span>nathaviela.tk@gmail.com</span>
+              <span>heythismyword@gmail.com</span>
             </a>
           </div>
 
-          {/* GitHub button */}
-          <div className="flex justify-center w-full">
+          {/* Social links */}
+          <div className="grid grid-cols-2 gap-4 w-full mt-4">
             <a
-              href="https://github.com/nathaviela"
+              href="https://github.com/nathavielathalitaaa"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary-pink inline-flex items-center gap-[10px] no-underline text-[1rem]"
+              className="btn-outline-brutal flex items-center justify-center gap-[10px] no-underline text-[0.9rem] sm:text-[1rem]"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               <i className="fa-brands fa-github" />
-              <span>Ikuti di GitHub</span>
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/nathaviela/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline-brutal flex items-center justify-center gap-[10px] no-underline text-[0.9rem] sm:text-[1rem]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              <i className="fa-brands fa-linkedin" />
+              <span>LinkedIn</span>
+            </a>
+            <a
+              href="https://instagram.com/hey_nathaviela"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline-brutal flex items-center justify-center gap-[10px] no-underline text-[0.9rem] sm:text-[1rem]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              <i className="fa-brands fa-instagram" />
+              <span>Instagram</span>
+            </a>
+            <a
+              href="https://wa.me/6289530025707"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline-brutal flex items-center justify-center gap-[10px] no-underline text-[0.9rem] sm:text-[1rem]"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              <i className="fa-brands fa-whatsapp" />
+              <span>WhatsApp</span>
             </a>
           </div>
         </motion.div>

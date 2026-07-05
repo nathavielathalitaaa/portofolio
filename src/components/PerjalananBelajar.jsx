@@ -14,10 +14,10 @@ export default function PerjalananBelajar() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="journey" className="px-[5%] py-[120px] max-w-[1200px] mx-auto" ref={ref}>
+    <section id="journey" className="px-[5%] py-[80px] max-w-[1200px] mx-auto" ref={ref}>
       {/* Section header */}
       <motion.div
-        className="relative text-center mb-[60px]"
+        className="relative text-center mb-[40px]"
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
@@ -58,19 +58,41 @@ export default function PerjalananBelajar() {
         <div className="title-underline" />
       </motion.div>
 
-      {/* Navigation buttons */}
-      <div className="flex justify-center gap-6 flex-wrap">
-        {semesters.map(sem => {
+      {/* Description */}
+      <p className="text-center text-[1rem] font-medium max-w-[500px] mx-auto mb-[40px]"
+         style={{ color: 'var(--text-muted)' }}>
+        Klik semester untuk melihat refleksi, capaian, dan dokumentasi
+        perjalanan belajarku secara lengkap.
+      </p>
+
+      {/* Semester cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-[600px] mx-auto">
+        {semesters.map((sem, idx) => {
+          const desc = idx === 0
+            ? 'Fondasi, eksplorasi, dan proyek pertama.'
+            : 'Kompetisi, AI, dan portofolio matang.'
           return (
-            <button
+            <div
               key={sem.id}
-              onClick={() => navigate(sem.id === 'sem1' ? '/semester-1' : '/semester-2')}
-              className="btn-outline-brutal inline-flex items-center gap-[10px] text-[1.05rem]"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="card-brutal p-6 flex flex-col items-start gap-3"
             >
-              {sem.label}
-              <i className="fa-solid fa-arrow-right text-[0.85rem]" />
-            </button>
+              <h3
+                className="font-black text-[1.1rem]"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'var(--text-dark)' }}
+              >
+                {sem.label}
+              </h3>
+              <p className="text-[0.88rem] font-medium" style={{ color: 'var(--text-muted)' }}>
+                {desc}
+              </p>
+              <button
+                onClick={() => navigate(sem.id === 'sem1' ? '/semester-1' : '/semester-2')}
+                className="btn-outline-brutal text-[0.9rem] mt-auto"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                Lihat Detail →
+              </button>
+            </div>
           )
         })}
       </div>

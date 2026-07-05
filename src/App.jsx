@@ -5,7 +5,6 @@ import About from './components/About'
 import PerjalananBelajar from './components/PerjalananBelajar'
 import Portfolio from './components/Portfolio'
 import Contact from './components/Contact'
-import Footer from './components/Footer'
 import Semester1 from './pages/Semester1'
 import Semester2 from './pages/Semester2'
 
@@ -20,7 +19,6 @@ function MainPortfolio() {
         <Portfolio />
         <Contact />
       </main>
-      <Footer />
     </>
   )
 }

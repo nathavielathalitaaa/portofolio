@@ -128,7 +128,6 @@ export default function About() {
                 }}
               />
 
-              {/* Photo Card on top */}
               <div
                 className="absolute border-2 border-black bg-white overflow-hidden shadow-[6px_6px_0px_#000000]"
                 style={{
@@ -160,9 +159,11 @@ export default function About() {
               initial="hidden"
               animate={inView ? 'visible' : 'hidden'}
             >
+              {/* Top accent strip */}
+              <div className={`w-full h-[4px] mb-4 ${i % 2 === 0 ? 'bg-[#C73053]' : 'bg-[#1E3A5F]'}`} />
               <div
-                className="w-10 h-10 rounded-none border-2 border-black flex items-center justify-center text-[1.1rem] shrink-0"
-                style={{ background: 'var(--brand-pink-light)', color: 'var(--brand-pink)' }}
+                className="w-10 h-10 rounded-none flex items-center justify-center text-[1.1rem] shrink-0"
+                style={{ background: i % 2 === 0 ? '#C73053' : '#1E3A5F', color: '#ffffff' }}
               >
                 <i className={`fa-solid ${card.icon}`} />
               </div>

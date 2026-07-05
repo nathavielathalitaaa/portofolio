@@ -12,7 +12,7 @@ const menuItems = [
   },
   {
     image: 'https://picsum.photos/seed/bqis/400/400',
-    link: '#',
+    link: 'https://github.com/nathavielathalitaaa/BQIS',
     title: 'BQIS',
     description: 'Sistem deteksi kualitas makanan dengan XGBoost + YOLOv8'
   },
@@ -24,7 +24,7 @@ const menuItems = [
   },
   {
     image: 'https://picsum.photos/seed/hris/400/400',
-    link: '#',
+    link: 'https://hrissinergi.remahbiskuit.my.id/login',
     title: 'HRIS Sinergi',
     description: 'Sistem HR berbasis peran untuk hotel'
   },
@@ -33,6 +33,12 @@ const menuItems = [
     link: '#',
     title: 'CTF Writeup',
     description: 'Analisis keamanan VulnHub Fawkes Harry Potter series'
+  },
+  {
+    image: 'https://picsum.photos/seed/object/400/400',
+    link: 'https://github.com/nathavielathalitaaa/skomda_objectetection',
+    title: 'Object Detection',
+    description: 'Sistem deteksi objek real-time berbasis AI'
   }
 ]
 
@@ -49,10 +55,10 @@ export default function Portfolio() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="portfolio" className="px-[5%] py-[120px] max-w-[1200px] mx-auto" ref={ref}>
+    <section id="portfolio" className="py-[120px] w-full" ref={ref}>
       {/* Section header */}
       <motion.div
-        className="relative text-center mb-[60px]"
+        className="relative text-center mb-[60px] px-[5%] max-w-[1200px] mx-auto"
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}

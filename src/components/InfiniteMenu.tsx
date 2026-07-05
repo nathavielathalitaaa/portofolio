@@ -26,7 +26,7 @@ void main() {
     vec3 centerPos = (uWorldMatrix * aInstanceMatrix * vec4(0., 0., 0., 1.)).xyz;
     float radius = length(centerPos.xyz);
 
-    if (gl_VertexID > 0) {
+    {
         vec3 rotationAxis = uRotationAxisVelocity.xyz;
         float rotationVelocity = min(.15, uRotationAxisVelocity.w * 15.);
         vec3 stretchDir = normalize(cross(centerPos, rotationAxis));
@@ -324,25 +324,31 @@ class IcosahedronGeometry extends Geometry {
 class DiscGeometry extends Geometry {
   constructor(steps = 4, radius = 1) {
     super();
-    const safeSteps = Math.max(4, steps);
-    const alpha = (2 * Math.PI) / safeSteps;
+    const halfWidth = radius;
+    const halfHeight = radius;
 
-    this.addVertex(0, 0, 0);
-    this.lastVertex.uv[0] = 0.5;
-    this.lastVertex.uv[1] = 0.5;
+    // Top-left
+    this.addVertex(-halfWidth, halfHeight, 0);
+    this.lastVertex.uv[0] = 0;
+    this.lastVertex.uv[1] = 1;
 
-    for (let i = 0; i < safeSteps; ++i) {
-      const x = Math.cos(alpha * i);
-      const y = Math.sin(alpha * i);
-      this.addVertex(radius * x, radius * y, 0);
-      this.lastVertex.uv[0] = x * 0.5 + 0.5;
-      this.lastVertex.uv[1] = y * 0.5 + 0.5;
+    // Top-right
+    this.addVertex(halfWidth, halfHeight, 0);
+    this.lastVertex.uv[0] = 1;
+    this.lastVertex.uv[1] = 1;
 
-      if (i > 0) {
-        this.addFace(0, i, i + 1);
-      }
-    }
-    this.addFace(0, safeSteps, 1);
+    // Bottom-left
+    this.addVertex(-halfWidth, -halfHeight, 0);
+    this.lastVertex.uv[0] = 0;
+    this.lastVertex.uv[1] = 0;
+
+    // Bottom-right
+    this.addVertex(halfWidth, -halfHeight, 0);
+    this.lastVertex.uv[0] = 1;
+    this.lastVertex.uv[1] = 0;
+
+    this.addFace(0, 2, 1);
+    this.addFace(1, 2, 3);
   }
 }
 
@@ -847,7 +853,78 @@ class InfiniteGridMenu {
       images.forEach((img, i) => {
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
-        ctx.drawImage(img, x, y, cellSize, cellSize);
+
+        // Draw Polaroid card background (white paper)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x + 10, y + 10, cellSize - 20, cellSize - 20);
+
+        // Draw outer brutalist border for the polaroid card
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(x + 10, y + 10, cellSize - 20, cellSize - 20);
+
+        // Image area
+        const imgX = x + 35;
+        const imgY = y + 35;
+        const imgW = cellSize - 70; // 442px width
+        const imgH = 340; // 340px height (leaves 127px bottom border for polaroid text)
+
+        // Draw the image with cover crop to fit the polaroid image box
+        const imgRatio = img.width / img.height;
+        const targetRatio = imgW / imgH;
+        let sx = 0, sy = 0, sw = img.width, sh = img.height;
+        if (imgRatio > targetRatio) {
+          sw = img.height * targetRatio;
+          sx = (img.width - sw) / 2;
+        } else {
+          sh = img.width / targetRatio;
+          sy = (img.height - sh) / 2;
+        }
+        ctx.drawImage(img, sx, sy, sw, sh, imgX, imgY, imgW, imgH);
+
+        // Draw brutalist border around the photo itself
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(imgX, imgY, imgW, imgH);
+
+        // Draw text: Title & Description inside the bottom white border
+        const item = this.items[i];
+        if (item) {
+          ctx.save();
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#000000';
+
+          // Draw Title
+          ctx.font = '900 28px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText(item.title, x + cellSize / 2, y + 415);
+
+          // Draw Description
+          ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
+          ctx.fillStyle = '#333333';
+          
+          const descX = x + cellSize / 2;
+          const descY = y + 445;
+          const descMaxWidth = cellSize - 80; // 432px
+          const descLineHeight = 22;
+
+          const words = item.description.split(' ');
+          let line = '';
+          let currentY = descY;
+          for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = ctx.measureText(testLine);
+            const testWidth = metrics.width;
+            if (testWidth > descMaxWidth && n > 0) {
+              ctx.fillText(line.trim(), descX, currentY);
+              line = words[n] + ' ';
+              currentY += descLineHeight;
+            } else {
+              line = testLine;
+            }
+          }
+          ctx.fillText(line.trim(), descX, currentY);
+          ctx.restore();
+        }
       });
 
       gl.bindTexture(gl.TEXTURE_2D, this.tex);
@@ -1064,7 +1141,7 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
   const activeIndex = activeItem ? items.indexOf(activeItem) : -1;
-  const isBlocked = activeIndex >= 2;
+  const isBlocked = false;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1101,15 +1178,22 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
     };
   }, [items, scale]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (isBlocked) {
+      e.preventDefault();
       setShowPopup(true);
       return;
     }
-    if (!activeItem?.link) return;
-    if (activeItem.link.startsWith('http')) {
-      window.open(activeItem.link, '_blank');
-    } else {
+    if (!activeItem?.link) {
+      e.preventDefault();
+      return;
+    }
+    if (activeItem.link === '#') {
+      e.preventDefault();
+      return;
+    }
+    if (!activeItem.link.startsWith('http')) {
+      e.preventDefault();
       console.log('Internal route:', activeItem.link);
     }
   };
@@ -1124,56 +1208,6 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
 
       {activeItem && (
         <>
-          <h2
-            className={`
-              select-none
-              absolute
-              font-black
-              [font-size:4.2rem]
-              left-[1.6em]
-              top-1/2
-              transform
-              translate-x-[20%]
-              -translate-y-1/2
-              transition-all
-              ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
-              text-[var(--text-dark)]
-              ${
-                isMoving
-                  ? 'opacity-0 pointer-events-none duration-[100ms]'
-                  : 'opacity-100 pointer-events-auto duration-[500ms]'
-              }
-              ${isBlocked ? 'blur-[8px]' : ''}
-            `}
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
-            {activeItem.title}
-          </h2>
-
-          <p
-            className={`
-              select-none
-              absolute
-              max-w-[12ch]
-              text-[1.3rem]
-              top-1/2
-              right-[1%]
-              transition-all
-              ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
-              text-[var(--text-muted)]
-              font-semibold
-              ${
-                isMoving
-                  ? 'opacity-0 pointer-events-none duration-[100ms] translate-x-[-60%] -translate-y-1/2'
-                  : 'opacity-100 pointer-events-auto duration-[500ms] translate-x-[-90%] -translate-y-1/2'
-              }
-              ${isBlocked ? 'blur-[5px]' : ''}
-            `}
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
-            {activeItem.description}
-          </p>
-
           {isBlocked && !isMoving && (
             <div
               className="absolute left-[1.6em] top-[60%] translate-x-[20%] z-20 border-2 border-black bg-yellow-300 text-black font-black uppercase text-[0.65rem] sm:text-[0.75rem] px-3 py-1 shadow-[2px_2px_0px_#000] rotate-[-2deg] select-none pointer-events-none"
@@ -1183,7 +1217,10 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
             </div>
           )}
 
-          <div
+          <a
+            href={activeItem.link}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={handleButtonClick}
             className={`
               absolute
@@ -1212,7 +1249,7 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [], scale = 1.0 }) => {
             <p className="select-none relative text-white font-black top-[0.5px] text-[20px]">
               {isBlocked ? '🔒' : '↗'}
             </p>
-          </div>
+          </a>
         </>
       )}
 
